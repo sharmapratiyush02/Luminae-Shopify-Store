@@ -341,7 +341,7 @@ To rebuild this store from scratch, follow the 8-step guide in `luminae_shopify_
 ## 👨‍💻 Built By
 
 **Pratiyush Sharma**
-- GitHub: [@sharmapratiyush](https://github.com/sharmapratiyush02/Luminae-Shopify-Store)
+- GitHub: [PRATIYUSH SHARMA](https://github.com/sharmapratiyush02/Luminae-Shopify-Store)
 - LinkedIn: [Pratiyush Sharma](https://www.linkedin.com/feed/update/urn:li:activity:7441392063188910080/)
 
 ---
