@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luminae — Complete Shopify Setup Guide</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #F5EFE6; color: #3D2B1F; }
+
+/* SIDEBAR */
+.layout { display: flex; min-height: 100vh; }
+.sidebar { width: 260px; background: #3D2B1F; color: #E8DDD0; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+.sidebar-logo { padding: 24px 20px 16px; border-bottom: 1px solid #5A3E2E; }
+.sidebar-logo .brand { font-family: Georgia, serif; font-size: 22px; color: #F5EFE6; letter-spacing: 0.1em; }
+.sidebar-logo .sub { font-size: 11px; color: #9A7B68; margin-top: 4px; letter-spacing: 0.06em; text-transform: uppercase; }
+.sidebar nav { padding: 12px 0; }
+.nav-group-title { font-size: 10px; font-weight: 700; color: #7A5C47; text-transform: uppercase; letter-spacing: 0.1em; padding: 12px 20px 6px; }
+.nav-item { display: block; padding: 9px 20px; font-size: 13px; color: #C8B8A8; cursor: pointer; border-left: 3px solid transparent; transition: all 0.2s; text-decoration: none; }
+.nav-item:hover { background: #4A3020; color: #F5EFE6; border-left-color: #C2714F; }
+.nav-item.active { background: #4A3020; color: #F5EFE6; border-left-color: #C2714F; font-weight: 600; }
+.nav-item .num { display: inline-block; width: 20px; height: 20px; background: #C2714F; border-radius: 50%; font-size: 10px; font-weight: 700; color: #fff; text-align: center; line-height: 20px; margin-right: 8px; flex-shrink: 0; }
+.nav-item.done .num { background: #1D9E75; }
+.progress-bar { margin: 12px 20px; background: #5A3E2E; border-radius: 4px; height: 4px; }
+.progress-fill { height: 4px; background: #C2714F; border-radius: 4px; transition: width 0.3s; }
+.progress-text { font-size: 11px; color: #9A7B68; padding: 4px 20px 12px; }
+
+/* MAIN CONTENT */
+.main { flex: 1; padding: 0; overflow-y: auto; }
+.step-page { display: none; padding: 40px 48px 80px; max-width: 860px; }
+.step-page.active { display: block; }
+
+/* STEP HEADER */
+.step-header { margin-bottom: 32px; }
+.step-badge { display: inline-block; background: #C2714F; color: #fff; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 10px; letter-spacing: 0.06em; }
+.step-badge.done { background: #1D9E75; }
+.step-title { font-family: Georgia, serif; font-size: 32px; font-weight: 400; color: #3D2B1F; margin-bottom: 8px; }
+.step-desc { font-size: 15px; color: #7A5C47; line-height: 1.6; border-left: 3px solid #C2714F; padding-left: 14px; }
+.time-badge { display: inline-block; background: #EDE5D8; color: #5A3E2E; font-size: 12px; padding: 4px 12px; border-radius: 20px; margin-top: 10px; }
+
+/* TASK BLOCKS */
+.task-group { margin-bottom: 32px; }
+.task-group-title { font-size: 14px; font-weight: 700; color: #3D2B1F; margin-bottom: 14px; padding: 8px 0; border-bottom: 1px solid #D4C5B5; display: flex; align-items: center; gap: 8px; }
+.task-group-title .icon { font-size: 16px; }
+
+.task { background: #fff; border: 1px solid #D4C5B5; border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
+.task-header { padding: 14px 16px; display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+.task-check { width: 20px; height: 20px; border: 2px solid #D4C5B5; border-radius: 4px; flex-shrink: 0; margin-top: 2px; transition: all 0.2s; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.task-check.checked { background: #1D9E75; border-color: #1D9E75; }
+.task-check.checked::after { content: '✓'; color: #fff; font-size: 12px; font-weight: 700; }
+.task-content { flex: 1; }
+.task-title { font-size: 14px; font-weight: 600; color: #3D2B1F; margin-bottom: 3px; }
+.task-subtitle { font-size: 12px; color: #7A5C47; }
+.task-body { padding: 0 16px 16px 48px; display: none; }
+.task-body.open { display: block; }
+.task-body p { font-size: 13px; line-height: 1.7; color: #4A3020; margin-bottom: 10px; }
+.task-body ol, .task-body ul { margin: 8px 0 12px 20px; }
+.task-body li { font-size: 13px; line-height: 1.8; color: #4A3020; }
+.task-body strong { color: #3D2B1F; }
+.value-box { background: #EDE5D8; border-radius: 6px; padding: 10px 14px; margin: 8px 0; font-size: 13px; }
+.value-label { font-size: 10px; font-weight: 700; color: #C2714F; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+.value-val { font-family: 'Courier New', monospace; font-size: 13px; color: #3D2B1F; background: #fff; padding: 6px 10px; border-radius: 4px; border: 1px solid #D4C5B5; display: block; margin-top: 4px; word-break: break-all; }
+.path-chip { display: inline-block; background: #3D2B1F; color: #E8DDD0; font-size: 11px; font-family: 'Courier New', monospace; padding: 3px 8px; border-radius: 4px; margin: 2px; }
+.warning-box { background: #FFF3CD; border: 1px solid #FBBF24; border-radius: 8px; padding: 12px 14px; margin: 10px 0; font-size: 13px; color: #78350F; }
+.success-box { background: #D1FAE5; border: 1px solid #34D399; border-radius: 8px; padding: 12px 14px; margin: 10px 0; font-size: 13px; color: #065F46; }
+.info-box { background: #DBEAFE; border: 1px solid #60A5FA; border-radius: 8px; padding: 12px 14px; margin: 10px 0; font-size: 13px; color: #1E3A5F; }
+.app-card { background: #FAF7F3; border: 1px solid #D4C5B5; border-radius: 8px; padding: 14px; margin-bottom: 10px; }
+.app-name { font-size: 14px; font-weight: 700; color: #3D2B1F; margin-bottom: 4px; }
+.app-desc { font-size: 12px; color: #7A5C47; margin-bottom: 8px; }
+.app-steps { font-size: 12px; color: #4A3020; }
+.app-steps li { margin-bottom: 4px; }
+.qa-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #EDE5D8; }
+.qa-check { width: 18px; height: 18px; border: 2px solid #D4C5B5; border-radius: 3px; flex-shrink: 0; margin-top: 2px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+.qa-check.checked { background: #1D9E75; border-color: #1D9E75; }
+.qa-check.checked::after { content: '✓'; color: #fff; font-size: 11px; font-weight: 700; }
+.qa-text { font-size: 13px; color: #4A3020; line-height: 1.6; }
+.qa-text strong { color: #3D2B1F; }
+.nav-buttons { display: flex; gap: 12px; margin-top: 32px; padding-top: 24px; border-top: 1px solid #D4C5B5; }
+.btn-next { background: #C2714F; color: #fff; border: none; border-radius: 8px; padding: 13px 28px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.btn-next:hover { background: #A05A3A; }
+.btn-prev { background: #EDE5D8; color: #3D2B1F; border: none; border-radius: 8px; padding: 13px 24px; font-size: 14px; cursor: pointer; transition: background 0.2s; }
+.btn-prev:hover { background: #D4C5B5; }
+
+/* FINAL STEP */
+.final-card { background: #3D2B1F; border-radius: 12px; padding: 32px; text-align: center; margin-bottom: 24px; }
+.final-card h2 { font-family: Georgia, serif; font-size: 28px; color: #F5EFE6; margin-bottom: 10px; }
+.final-card p { font-size: 14px; color: #C8B8A8; line-height: 1.7; }
+.deliverable-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+.del-card { background: #fff; border: 1px solid #D4C5B5; border-radius: 8px; padding: 14px; }
+.del-icon { font-size: 20px; margin-bottom: 6px; }
+.del-title { font-size: 13px; font-weight: 700; color: #3D2B1F; margin-bottom: 4px; }
+.del-desc { font-size: 12px; color: #7A5C47; }
+
+@media(max-width:700px){
+  .layout { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; position: relative; }
+  .step-page { padding: 24px 20px 60px; }
+  .deliverable-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Luminae</div>
+    <div class="sub">Shopify Setup Guide</div>
+    <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+    <div class="progress-text" id="prog-text">0 of 8 steps complete</div>
+  </div>
+  <nav>
+    <div class="nav-group-title">Day 1</div>
+    <a class="nav-item active" onclick="goTo(0)" id="nav0"><span class="num">1</span>Store Setup</a>
+    <a class="nav-item" onclick="goTo(1)" id="nav1"><span class="num">2</span>Theme & Branding</a>
+    <a class="nav-item" onclick="goTo(2)" id="nav2"><span class="num">3</span>Navigation & Pages</a>
+    <a class="nav-item" onclick="goTo(3)" id="nav3"><span class="num">4</span>Products & CSV Import</a>
+    <a class="nav-item" onclick="goTo(4)" id="nav4"><span class="num">5</span>Apps Setup</a>
+    <div class="nav-group-title">Day 2</div>
+    <a class="nav-item" onclick="goTo(5)" id="nav5"><span class="num">6</span>Homepage Design</a>
+    <a class="nav-item" onclick="goTo(6)" id="nav6"><span class="num">7</span>Testing & QA</a>
+    <a class="nav-item" onclick="goTo(7)" id="nav7"><span class="num">8</span>Final Submission</a>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- STEP 1: STORE SETUP -->
+<div class="step-page active" id="step0">
+  <div class="step-header">
+    <div class="step-badge">Day 1 · Step 1</div>
+    <div class="step-title">Store Setup & Environment</div>
+    <div class="step-desc">Create your Shopify Partner account, development store, and configure all basic store settings before touching any design.</div>
+    <div class="time-badge">⏱ Estimated time: 1 hour</div>
+  </div>
+
+  <div class="task-group">
+    <div class="task-group-title"><span class="icon">🏗️</span> Shopify Partner Account</div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Create Shopify Partner Account</div><div class="task-subtitle">Use a fresh email address — not your personal one</div></div>
+      </div>
+      <div class="task-body">
+        <ol><li>Go to <strong>partners.shopify.com</strong></li><li>Click <strong>Join for free</strong></li><li>Sign up with a new email (e.g. luminae.store@gmail.com)</li><li>Complete the onboarding — select <strong>"I build stores for clients"</strong></li><li>Confirm your email address</li></ol>
+        <div class="value-box"><div class="value-label">Account email to use</div><span class="value-val">luminae.store@gmail.com (create this fresh)</span></div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Create Development Store</div><div class="task-subtitle">Partners dashboard → Stores → Add store</div></div>
+      </div>
+      <div class="task-body">
+        <ol><li>In Partners dashboard → click <strong>Stores</strong> in left sidebar</li><li>Click <strong>Add store → Create development store</strong></li><li>Set store name: <strong>Luminae</strong></li><li>Select purpose: <strong>Create a store to test and build</strong></li><li>Click <strong>Save</strong> — your store URL will be <span class="value-val">luminae.myshopify.com</span></li></ol>
+        <div class="info-box">Development stores are free and don't require real payment details for testing orders.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-group">
+    <div class="task-group-title"><span class="icon">⚙️</span> Basic Store Settings</div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Set Store Name, Timezone & Currency</div><div class="task-subtitle">Settings → General</div></div>
+      </div>
+      <div class="task-body">
+        <p>Go to <span class="path-chip">Settings</span> → <span class="path-chip">General</span></p>
+        <div class="value-box"><div class="value-label">Store name</div><span class="value-val">Luminae</span></div>
+        <div class="value-box"><div class="value-label">Store email</div><span class="value-val">hello@luminae.in</span></div>
+        <div class="value-box"><div class="value-label">Timezone</div><span class="value-val">(GMT+5:30) India Standard Time</span></div>
+        <div class="value-box"><div class="value-label">Store currency</div><span class="value-val">Indian Rupee (INR ₹)</span></div>
+        <div class="value-box"><div class="value-label">Unit system</div><span class="value-val">Metric system</span></div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Enable Password Protection</div><div class="task-subtitle">Online Store → Preferences → Password protection</div></div>
+      </div>
+      <div class="task-body">
+        <p>Go to <span class="path-chip">Online Store</span> → <span class="path-chip">Preferences</span> → scroll to <strong>Password protection</strong></p>
+        <ol><li>Toggle <strong>Enable password</strong> ON</li><li>Set password to exactly: <strong>Test@123</strong></li><li>Message: "Our store is coming soon. Enter password to preview."</li><li>Click <strong>Save</strong></li></ol>
+        <div class="value-box"><div class="value-label">Store password (required by hiring team)</div><span class="value-val">Test@123</span></div>
+        <div class="warning-box">⚠️ This exact password is required by Digital Heroes for store review. Do not change it.</div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Configure Shipping Zones</div><div class="task-subtitle">Settings → Shipping and delivery</div></div>
+      </div>
+      <div class="task-body">
+        <p>Go to <span class="path-chip">Settings</span> → <span class="path-chip">Shipping and delivery</span> → <strong>Manage rates</strong></p>
+        <ol>
+          <li>Delete any default rates</li>
+          <li>Add shipping zone: <strong>India</strong> → select <strong>India</strong> as country</li>
+          <li>Add rate: <strong>Standard Shipping</strong> — ₹79 — no conditions</li>
+          <li>Add rate: <strong>Free Shipping</strong> — ₹0 — minimum order value ₹999</li>
+          <li>Add rate: <strong>Express Shipping</strong> — ₹149 — no conditions</li>
+          <li>Click <strong>Save</strong></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Set Up Taxes</div><div class="task-subtitle">Settings → Taxes and duties</div></div>
+      </div>
+      <div class="task-body">
+        <p>Go to <span class="path-chip">Settings</span> → <span class="path-chip">Taxes and duties</span></p>
+        <ol><li>Enable <strong>India</strong> as your tax region</li><li>Set GST at <strong>18%</strong> for body care and home products</li><li>Check <strong>"Include tax in product prices"</strong> so displayed prices are final</li><li>Save changes</li></ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn-next" onclick="nextStep(0)">Next: Theme & Branding →</button>
+  </div>
+</div>
+
+<!-- STEP 2: THEME & BRANDING -->
+<div class="step-page" id="step1">
+  <div class="step-header">
+    <div class="step-badge">Day 1 · Step 2</div>
+    <div class="step-title">Theme Setup & Brand Colors</div>
+    <div class="step-desc">Install the Dawn theme and apply Luminae's complete brand identity — colors, fonts, logo, and favicon.</div>
+    <div class="time-badge">⏱ Estimated time: 1.5 hours</div>
+  </div>
+
+  <div class="task-group">
+    <div class="task-group-title"><span class="icon">🎨</span> Theme Installation</div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Install Dawn Theme</div><div class="task-subtitle">Online Store → Themes → Explore free themes</div></div>
+      </div>
+      <div class="task-body">
+        <ol><li>Go to <span class="path-chip">Online Store</span> → <span class="path-chip">Themes</span></li><li>Click <strong>Explore free themes</strong></li><li>Find and select <strong>Dawn</strong></li><li>Click <strong>Add to theme library</strong></li><li>Click <strong>Publish</strong> to make it your active theme</li></ol>
+        <div class="info-box">Dawn is Shopify's flagship theme — clean, fast, and excellent for lifestyle brands like Luminae.</div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Apply Brand Colors</div><div class="task-subtitle">Customize theme → Colors settings</div></div>
+      </div>
+      <div class="task-body">
+        <p>Click <strong>Customize</strong> on the Dawn theme → then <strong>Theme settings</strong> (bottom left) → <strong>Colors</strong></p>
+        <div class="value-box"><div class="value-label">Color — Background</div><span class="value-val">#F5EFE6 (Linen Cream — Primary 60%)</span></div>
+        <div class="value-box"><div class="value-label">Color — Text</div><span class="value-val">#3D2B1F (Aged Oak — Secondary 30%)</span></div>
+        <div class="value-box"><div class="value-label">Color — Accent (Buttons, links, CTAs)</div><span class="value-val">#C2714F (Terra Glow — Accent 10%)</span></div>
+        <div class="value-box"><div class="value-label">Color — Secondary background</div><span class="value-val">#E8DDD0 (Warm Sand)</span></div>
+        <div class="value-box"><div class="value-label">Color — Button text</div><span class="value-val">#FFFFFF (white)</span></div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Set Fonts</div><div class="task-subtitle">Theme settings → Typography</div></div>
+      </div>
+      <div class="task-body">
+        <p>In Theme Customizer → <strong>Theme settings</strong> → <strong>Typography</strong></p>
+        <div class="value-box"><div class="value-label">Heading font</div><span class="value-val">Cormorant Garamond (search in font picker)</span></div>
+        <div class="value-box"><div class="value-label">Body font</div><span class="value-val">Jost (search in font picker)</span></div>
+        <div class="value-box"><div class="value-label">Heading size scale</div><span class="value-val">1.2 (slightly larger than default)</span></div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Create & Upload Logo</div><div class="task-subtitle">Use Canva — detailed instructions inside</div></div>
+      </div>
+      <div class="task-body">
+        <p><strong>Create in Canva (canva.com):</strong></p>
+        <ol>
+          <li>Open Canva → New design → Custom size: <strong>400 × 120 px</strong></li>
+          <li>Set background to <strong>transparent</strong></li>
+          <li>Add text: <strong>Luminae</strong> in font <strong>Cormorant Garamond</strong>, size 60, color <strong>#3D2B1F</strong></li>
+          <li>Add a small decorative element: a thin horizontal line or a small leaf/botanical icon between letters</li>
+          <li>Below in smaller text (Jost, size 18, color #7A5C47): <strong>RITUAL · WARMTH · WELLBEING</strong></li>
+          <li>Download as <strong>PNG with transparent background</strong></li>
+        </ol>
+        <p><strong>Upload to Shopify:</strong></p>
+        <ol>
+          <li>In Theme Customizer → <strong>Header</strong> section → Upload logo image</li>
+          <li>Set logo width to <strong>180px</strong></li>
+        </ol>
+        <div class="value-box"><div class="value-label">Logo alt text</div><span class="value-val">Luminae — Natural Body Care & Home Wellness</span></div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Set Favicon</div><div class="task-subtitle">Theme settings → Favicon</div></div>
+      </div>
+      <div class="task-body">
+        <ol>
+          <li>In Canva → new design → 32×32 px</li>
+          <li>Background: <strong>#C2714F</strong> (Terra Glow)</li>
+          <li>Text: letter <strong>L</strong> in Cormorant Garamond, white, size 22</li>
+          <li>Download as PNG</li>
+          <li>Upload in Theme Customizer → <strong>Theme settings</strong> → <strong>Favicon</strong></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn-prev" onclick="goTo(0)">← Back</button>
+    <button class="btn-next" onclick="nextStep(1)">Next: Navigation & Pages →</button>
+  </div>
+</div>
+
+<!-- STEP 3: NAVIGATION & PAGES -->
+<div class="step-page" id="step2">
+  <div class="step-header">
+    <div class="step-badge">Day 1 · Step 3</div>
+    <div class="step-title">Navigation & Store Pages</div>
+    <div class="step-desc">Set up your main and footer menus, create all essential pages, and add the content from the Store Pages file.</div>
+    <div class="time-badge">⏱ Estimated time: 1.5 hours</div>
+  </div>
+
+  <div class="task-group">
+    <div class="task-group-title"><span class="icon">🗺️</span> Navigation Menus</div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Set Up Main Navigation Menu</div><div class="task-subtitle">Online Store → Navigation → Main menu</div></div>
+      </div>
+      <div class="task-body">
+        <p>Go to <span class="path-chip">Online Store</span> → <span class="path-chip">Navigation</span> → click <strong>Main menu</strong></p>
+        <ol>
+          <li>Delete any default items</li>
+          <li>Add: <strong>Home</strong> → link: / (homepage)</li>
+          <li>Add: <strong>Shop All</strong> → link: /collections/all</li>
+          <li>Add dropdown: <strong>Collections</strong> with children:
+            <ul><li>Body Rituals → /collections/body-rituals</li><li>Home Ambiance → /collections/home-ambiance</li><li>Ritual Bundles → /collections/ritual-bundles</li></ul>
+          </li>
+          <li>Add: <strong>About Us</strong> → link: /pages/about</li>
+          <li>Add: <strong>Contact</strong> → link: /pages/contact</li>
+        </ol>
+        <div class="info-box">In Dawn theme, add sub-menu items by clicking "Add sub-item" under the Collections menu item.</div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Set Up Footer Menu</div><div class="task-subtitle">Online Store → Navigation → Footer menu</div></div>
+      </div>
+      <div class="task-body">
+        <p>Go to <span class="path-chip">Online Store</span> → <span class="path-chip">Navigation</span> → click <strong>Footer menu</strong></p>
+        <ol>
+          <li>Add: <strong>FAQ</strong> → /pages/faq</li>
+          <li>Add: <strong>Shipping & Returns</strong> → /pages/shipping-returns</li>
+          <li>Add: <strong>Privacy Policy</strong> → /policies/privacy-policy</li>
+          <li>Add: <strong>Terms of Service</strong> → /policies/terms-of-service</li>
+          <li>Add: <strong>Contact Us</strong> → /pages/contact</li>
+          <li>Add: <strong>Track Order</strong> → /pages/track-order</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-group">
+    <div class="task-group-title"><span class="icon">📄</span> Store Pages</div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Create All 5 Essential Pages</div><div class="task-subtitle">Online Store → Pages → Add page (repeat for each)</div></div>
+      </div>
+      <div class="task-body">
+        <p>Open the <strong>luminae_store_pages.html</strong> file. For each page:</p>
+        <ol>
+          <li>Go to <span class="path-chip">Online Store</span> → <span class="path-chip">Pages</span> → <strong>Add page</strong></li>
+          <li>Enter the page title</li>
+          <li>Click <strong>&lt;/&gt;</strong> (HTML view) in the editor</li>
+          <li>Paste the HTML content from the store pages file</li>
+          <li>Click <strong>Save</strong></li>
+        </ol>
+        <div class="value-box"><div class="value-label">Pages to create (in order)</div><span class="value-val">1. About Us  2. FAQ  3. Shipping & Returns  4. Contact Us  5. Track Order</span></div>
+        <div class="info-box">Privacy Policy and Terms of Service go in <strong>Settings → Policies</strong> (not Pages).</div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Add Legal Policies</div><div class="task-subtitle">Settings → Policies</div></div>
+      </div>
+      <div class="task-body">
+        <p>Go to <span class="path-chip">Settings</span> → <span class="path-chip">Policies</span></p>
+        <ol>
+          <li>Paste <strong>Privacy Policy</strong> content into the Privacy Policy field</li>
+          <li>Paste <strong>Terms of Service</strong> content into the Terms of Service field</li>
+          <li>Paste <strong>Shipping & Returns</strong> content into the Refund Policy field</li>
+          <li>Paste same Shipping content into the Shipping Policy field</li>
+          <li>Click <strong>Save</strong></li>
+        </ol>
+        <div class="success-box">✓ Shopify automatically links these to your checkout footer and cookie banner.</div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Create Collections</div><div class="task-subtitle">Products → Collections → Create collection</div></div>
+      </div>
+      <div class="task-body">
+        <p>Create 3 collections before importing products:</p>
+        <ol>
+          <li>Go to <span class="path-chip">Products</span> → <span class="path-chip">Collections</span> → <strong>Create collection</strong></li>
+          <li><strong>Collection 1:</strong> Title: <em>Body Rituals</em> · Handle: body-rituals · Add the Body Rituals description from the homepage copy file · Collection type: Manual</li>
+          <li><strong>Collection 2:</strong> Title: <em>Home Ambiance</em> · Handle: home-ambiance · Add description · Type: Manual</li>
+          <li><strong>Collection 3:</strong> Title: <em>Ritual Bundles</em> · Handle: ritual-bundles · Add description · Type: Manual</li>
+          <li>Upload a warm lifestyle image for each collection (search Unsplash for "natural body care", "soy candle", "gift set")</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn-prev" onclick="goTo(1)">← Back</button>
+    <button class="btn-next" onclick="nextStep(2)">Next: Products & CSV →</button>
+  </div>
+</div>
+
+<!-- STEP 4: PRODUCTS -->
+<div class="step-page" id="step3">
+  <div class="step-header">
+    <div class="step-badge">Day 1 · Step 4</div>
+    <div class="step-title">Products & CSV Import</div>
+    <div class="step-desc">Import all 7 products using the Shopify CSV, then add product images and assign products to collections.</div>
+    <div class="time-badge">⏱ Estimated time: 2 hours</div>
+  </div>
+
+  <div class="task-group">
+    <div class="task-group-title"><span class="icon">📦</span> Import Products</div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Import Products via CSV</div><div class="task-subtitle">Products → Import → Upload luminae_products.csv</div></div>
+      </div>
+      <div class="task-body">
+        <ol>
+          <li>Go to <span class="path-chip">Products</span> → click <strong>Import</strong> button (top right)</li>
+          <li>Click <strong>Add file</strong> → select <strong>luminae_products.csv</strong></li>
+          <li>Click <strong>Upload and preview</strong></li>
+          <li>Review the preview — confirm all 7 products show with correct prices</li>
+          <li>Click <strong>Import products</strong></li>
+          <li>Wait for confirmation email (usually instant)</li>
+        </ol>
+        <div class="success-box">✓ All 7 products with variants, descriptions, SEO, and pricing will import automatically.</div>
+        <div class="warning-box">⚠️ If any product shows an error, add it manually using the product details from the Product Catalogue reference.</div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Add Product Images</div><div class="task-subtitle">Each product needs 3–5 high-quality images</div></div>
+      </div>
+      <div class="task-body">
+        <p>For each product, find 3–5 images on <strong>Unsplash.com</strong> (free, no attribution needed for commercial use):</p>
+        <div class="value-box"><div class="value-label">Search terms per product</div><span class="value-val">
+Body Oil → "argan body oil bottle", "natural face oil dropper"
+Body Scrub → "salt body scrub jar", "natural exfoliant bathroom"
+Soap Bar → "artisan soap bar handmade", "natural goat milk soap"
+Candle → "soy wax candle ceramic", "scented candle lifestyle"
+Diffuser → "reed diffuser glass bottle", "home fragrance"
+Bundles → "natural skincare gift set", "spa gift box wrapped"</span></div>
+        <ol>
+          <li>Open each product in Shopify admin</li>
+          <li>Upload 3–5 images in the Media section</li>
+          <li>Set the first image as the main product image</li>
+          <li>Add alt text to every image (product name + key ingredient)</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Assign Products to Collections</div><div class="task-subtitle">Open each collection and add products manually</div></div>
+      </div>
+      <div class="task-body">
+        <p>Go to <span class="path-chip">Products</span> → <span class="path-chip">Collections</span> → open each collection → click <strong>Browse</strong> to add products:</p>
+        <div class="value-box"><div class="value-label">Body Rituals collection</div><span class="value-val">Rose & Argan Body Oil · Himalayan Salt Body Scrub · Goat Milk Soap Bar</span></div>
+        <div class="value-box"><div class="value-label">Home Ambiance collection</div><span class="value-val">Soy Wax Ritual Candle · Botanical Reed Diffuser</span></div>
+        <div class="value-box"><div class="value-label">Ritual Bundles collection</div><span class="value-val">The Glow Ritual Kit · The Warm Home Gift Set</span></div>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">Create Discount Codes</div><div class="task-subtitle">Discounts → Create discount (4 codes)</div></div>
+      </div>
+      <div class="task-body">
+        <p>Go to <span class="path-chip">Discounts</span> → <strong>Create discount</strong> for each:</p>
+        <ol>
+          <li><strong>WELCOME10</strong> — 10% off, min ₹500, one per customer</li>
+          <li><strong>LUMINFREE</strong> — Free shipping, min order ₹999</li>
+          <li><strong>RITUAL25</strong> — 25% off Ritual Bundles collection only</li>
+          <li><strong>GIFTWITH15</strong> — 15% off, min order ₹1,500</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn-prev" onclick="goTo(2)">← Back</button>
+    <button class="btn-next" onclick="nextStep(3)">Next: Apps Setup →</button>
+  </div>
+</div>
+
+<!-- STEP 5: APPS -->
+<div class="step-page" id="step4">
+  <div class="step-header">
+    <div class="step-badge">Day 1 · Step 5</div>
+    <div class="step-title">Apps Installation & Configuration</div>
+    <div class="step-desc">Install and configure all 6 required apps. Each one must be properly set up — not just installed.</div>
+    <div class="time-badge">⏱ Estimated time: 1.5 hours</div>
+  </div>
+
+  <div class="task-group">
+    <div class="task-group-title"><span class="icon">🔌</span> Required Apps (all free)</div>
+
+    <div class="app-card">
+      <div class="app-name">1. Judge.me Product Reviews</div>
+      <div class="app-desc">Displays star ratings and written reviews on product pages. Add the 4 testimonials from the homepage copy as manual reviews.</div>
+      <ul class="app-steps">
+        <li>Install from Shopify App Store → search "Judge.me"</li>
+        <li>Open Judge.me → <strong>Reviews → Import reviews</strong> → manually add the 4 testimonials</li>
+        <li>Settings → <strong>Review widget</strong> → set star color to <strong>#C2714F</strong></li>
+        <li>Enable: <strong>Show star rating on collection pages</strong></li>
+        <li>Enable: <strong>Review request emails</strong> (set delay to 7 days)</li>
+      </ul>
+    </div>
+
+    <div class="app-card">
+      <div class="app-name">2. Shopify Search & Discovery</div>
+      <div class="app-desc">Powers the search bar and product filtering on collection pages.</div>
+      <ul class="app-steps">
+        <li>Install from App Store → search "Shopify Search & Discovery"</li>
+        <li>Open app → <strong>Filters</strong> → Add filter: <strong>Product type, Scent, Size</strong></li>
+        <li>Synonyms → add: "soap" = "bar soap", "oil" = "body oil"</li>
+        <li>Make sure search is enabled in Theme Customizer → Header</li>
+      </ul>
+    </div>
+
+    <div class="app-card">
+      <div class="app-name">3. Shopify Bundles</div>
+      <div class="app-desc">Create the "Soap Trio" BOGO bundle directly within Shopify.</div>
+      <ul class="app-steps">
+        <li>Install from App Store → search "Shopify Bundles"</li>
+        <li>Create bundle: <strong>The Soap Trio</strong> → select all 3 Soap Bar variants</li>
+        <li>Set bundle discount: <strong>Buy 3, save 30%</strong></li>
+        <li>Add bundle to Ritual Bundles collection</li>
+      </ul>
+    </div>
+
+    <div class="app-card">
+      <div class="app-name">4. Labeler — Product Labels</div>
+      <div class="app-desc">Adds "Bestseller", "New", and "Sale" badges on product images.</div>
+      <ul class="app-steps">
+        <li>Install from App Store → search "Labeler Product Labels"</li>
+        <li>Create label: <strong>Bestseller</strong> — apply to Rose & Argan Oil, Soy Candle, Glow Ritual Kit</li>
+        <li>Create label: <strong>Gift Favourite</strong> — apply to both bundle products</li>
+        <li>Set label color to match brand: background <strong>#C2714F</strong>, text white</li>
+      </ul>
+    </div>
+
+    <div class="app-card">
+      <div class="app-name">5. Shopify Subscriptions</div>
+      <div class="app-desc">Adds a "Subscribe & Save" option on repeat-purchase products like the soap and body oil.</div>
+      <ul class="app-steps">
+        <li>Install from App Store → search "Shopify Subscriptions"</li>
+        <li>Create subscription plan: <strong>Subscribe & Save 15%</strong> — monthly delivery</li>
+        <li>Apply to: Soap Bar, Body Oil, Body Scrub</li>
+        <li>Enable widget on product pages</li>
+      </ul>
+    </div>
+
+    <div class="app-card">
+      <div class="app-name">6. Shopify Marketplace Connect (optional)</div>
+      <div class="app-desc">Connects store to marketplaces. Install and configure basic settings to demonstrate it's set up.</div>
+      <ul class="app-steps">
+        <li>Install from App Store → search "Shopify Marketplace Connect"</li>
+        <li>Connect to any marketplace (Amazon or Flipkart)</li>
+        <li>Map 2–3 products to show the integration is active</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn-prev" onclick="goTo(3)">← Back</button>
+    <button class="btn-next" onclick="nextStep(4)">Next: Homepage Design →</button>
+  </div>
+</div>
+
+<!-- STEP 6: HOMEPAGE DESIGN -->
+<div class="step-page" id="step5">
+  <div class="step-header">
+    <div class="step-badge">Day 2 · Step 6</div>
+    <div class="step-title">Homepage Design in Theme Editor</div>
+    <div class="step-desc">Build the full homepage section by section using Shopify's Theme Editor. Use all copy from the Homepage Copy file.</div>
+    <div class="time-badge">⏱ Estimated time: 3 hours</div>
+  </div>
+
+  <div class="task-group">
+    <div class="task-group-title"><span class="icon">🖥️</span> Build Homepage Sections (in order)</div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">1. Announcement Bar</div><div class="task-subtitle">3 rotating messages with Terra Glow background</div></div>
+      </div>
+      <div class="task-body">
+        <ol><li>Theme Customizer → <strong>Header</strong> → enable Announcement bar</li><li>Set background: <strong>#C2714F</strong></li><li>Add all 3 announcement messages from the Homepage Copy file</li><li>Enable <strong>Auto-rotate</strong> every 5 seconds</li></ol>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">2. Hero Banner (Image Banner section)</div><div class="task-subtitle">Full-width image with headline and 2 CTAs</div></div>
+      </div>
+      <div class="task-body">
+        <ol>
+          <li>Add section: <strong>Image banner</strong></li>
+          <li>Upload a warm lifestyle image (Unsplash: "natural body care flatlay warm earth tones")</li>
+          <li>Set image overlay: color <strong>#3D2B1F</strong>, opacity <strong>40%</strong></li>
+          <li>Add heading: <em>Your daily ritual, elevated.</em> (Cormorant Garamond, large)</li>
+          <li>Add subheading from Homepage Copy file</li>
+          <li>Add Button 1: <strong>Shop the Collection</strong> → /collections/all (filled style)</li>
+          <li>Add Button 2: <strong>Explore Gift Sets</strong> → /collections/ritual-bundles (outline style)</li>
+          <li>Set section height to <strong>Large</strong> or <strong>Full screen</strong></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">3. Featured Collections</div><div class="task-subtitle">3 collection cards with warm imagery</div></div>
+      </div>
+      <div class="task-body">
+        <ol><li>Add section: <strong>Collection list</strong></li><li>Add heading: <em>Shop by ritual</em></li><li>Add subheading from copy file</li><li>Add all 3 collections</li><li>Set columns to 3 on desktop, 1 on mobile</li><li>Image ratio: Square or Portrait</li></ol>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">4. Featured Products (Best Sellers)</div><div class="task-subtitle">Show 4 bestselling products with Add to Cart</div></div>
+      </div>
+      <div class="task-body">
+        <ol><li>Add section: <strong>Featured collection</strong></li><li>Heading: <em>Our bestsellers</em></li><li>Subheading: <em>The rituals our customers keep coming back for.</em></li><li>Select <strong>Body Rituals</strong> collection</li><li>Set products per row: 4 (desktop), 2 (mobile)</li><li>Enable: Show vendor, Show rating</li></ol>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">5. USP / Benefits Section</div><div class="task-subtitle">4 brand pillars with icons</div></div>
+      </div>
+      <div class="task-body">
+        <ol><li>Add section: <strong>Multicolumn</strong></li><li>Set background: <strong>#E8DDD0</strong> (Warm Sand)</li><li>Add heading: <em>Why Luminae?</em></li><li>Add 4 columns — use pillar content from Homepage Copy file</li><li>Add icons: use Shopify's built-in icon library (leaf, hand, heart, package)</li><li>Set columns to 4 on desktop</li></ol>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">6. Brand Story / Rich Text Section</div><div class="task-subtitle">A warm narrative section between products and testimonials</div></div>
+      </div>
+      <div class="task-body">
+        <ol><li>Add section: <strong>Rich text</strong></li><li>Heading: <em>Made with intention. Crafted with care.</em></li><li>Text: "Luminae was born from a belief that everyday rituals deserve to feel extraordinary. Every product is handcrafted in small batches using only natural ingredients — nothing synthetic, nothing that doesn't belong on your skin or in your home."</li><li>Add CTA button: <strong>Read Our Story</strong> → /pages/about</li><li>Set text alignment: center</li></ol>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">7. Testimonials</div><div class="task-subtitle">4 customer reviews with stars</div></div>
+      </div>
+      <div class="task-body">
+        <ol><li>Add section: <strong>Multicolumn</strong> (or use Testimonials if available in Dawn)</li><li>Background: <strong>#FAF7F3</strong></li><li>Heading: <em>Real rituals. Real results.</em></li><li>Add all 4 reviews from the Homepage Copy file</li><li>Add star ratings manually using ★★★★★ text</li></ol>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">8. Gift Sets Highlight</div><div class="task-subtitle">Showcase the Ritual Bundles collection</div></div>
+      </div>
+      <div class="task-body">
+        <ol><li>Add section: <strong>Image with text</strong></li><li>Upload a gift box / bundle lifestyle image</li><li>Heading: <em>Give the gift of ritual.</em></li><li>Text: "Our Ritual Bundles bring together Luminae's best-loved products in beautifully packaged gift sets. Perfect for birthdays, housewarmings, or simply because."</li><li>Button: <strong>Shop Gift Sets</strong> → /collections/ritual-bundles</li><li>Image position: Right (text on left)</li></ol>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">9. Newsletter Signup</div><div class="task-subtitle">Email capture with 10% discount offer</div></div>
+      </div>
+      <div class="task-body">
+        <ol><li>Add section: <strong>Email signup</strong></li><li>Background: <strong>#3D2B1F</strong></li><li>Text color: <strong>#F5EFE6</strong></li><li>All copy from Homepage Copy file → Newsletter tab</li><li>Button color: <strong>#C2714F</strong></li></ol>
+      </div>
+    </div>
+
+    <div class="task">
+      <div class="task-header" onclick="toggleTask(this)">
+        <div class="task-check" onclick="toggleCheck(event,this)"></div>
+        <div class="task-content"><div class="task-title">10. Footer</div><div class="task-subtitle">3-column footer with links, tagline, social icons</div></div>
+      </div>
+      <div class="task-body">
+        <ol><li>Edit Footer section in Theme Customizer</li><li>Background: <strong>#3D2B1F</strong>, text: <strong>#E8DDD0</strong></li><li>Add brand tagline from Homepage Copy file</li><li>Enable 3 menu columns using the footer menus created earlier</li><li>Add social media icons (Instagram, Pinterest, Facebook)</li><li>Add copyright text from copy file</li><li>Enable payment icons in footer</li></ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn-prev" onclick="goTo(4)">← Back</button>
+    <button class="btn-next" onclick="nextStep(5)">Next: Testing & QA →</button>
+  </div>
+</div>
+
+<!-- STEP 7: TESTING -->
+<div class="step-page" id="step6">
+  <div class="step-header">
+    <div class="step-badge">Day 2 · Step 7</div>
+    <div class="step-title">Testing & QA Checklist</div>
+    <div class="step-desc">Test every page, every link, and the complete customer journey before submission. Check each item below.</div>
+    <div class="time-badge">⏱ Estimated time: 2 hours</div>
+  </div>
+
+  <div class="task-group">
+    <div class="task-group-title"><span class="icon">🔗</span> Navigation & Pages</div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Homepage</strong> loads correctly with all sections visible — no broken images, no placeholder text</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Main menu</strong> — all links work, dropdown opens correctly on desktop and mobile</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Footer menu</strong> — all 6 links go to the correct pages</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>About Us, FAQ, Shipping pages</strong> — open and display formatted content correctly</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Logo</strong> — displays correctly on all screen sizes, links back to homepage</div></div>
+  </div>
+
+  <div class="task-group">
+    <div class="task-group-title"><span class="icon">🛍️</span> Product Pages</div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>All 7 products</strong> show correct title, description, pricing, compare-at price, and images</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Variant selectors</strong> work on all products with variants (size, scent options)</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Judge.me reviews</strong> appear below product description with star ratings</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Product labels</strong> (Bestseller badges) appear on correct products in collection and product pages</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Subscribe & Save</strong> option appears on Soap Bar, Body Oil, and Scrub</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Add to Cart</strong> button works on all products and variants</div></div>
+  </div>
+
+  <div class="task-group">
+    <div class="task-group-title"><span class="icon">🛒</span> Cart & Checkout Journey</div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Add product to cart</strong> → cart icon updates with item count</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Cart page</strong> shows correct product, variant, price, and quantity controls</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Discount code WELCOME10</strong> — apply in cart → 10% discount shows correctly</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Discount code LUMINFREE</strong> — apply → free shipping shows when order ≥ ₹999</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Shipping rates</strong> appear at checkout — Standard (₹79), Free (₹0 over ₹999), Express (₹149)</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Checkout page</strong> shows order summary, applies discounts, shows Luminae branding</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Test order completed</strong> (use Shopify's Bogus Gateway in test mode) — success page shows</div></div>
+  </div>
+
+  <div class="task-group">
+    <div class="task-group-title"><span class="icon">📱</span> Mobile Responsiveness</div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Homepage</strong> — all sections display correctly on mobile (375px width)</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Product pages</strong> — images, descriptions, and Add to Cart all readable and tappable on mobile</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Navigation</strong> — hamburger menu works, all links accessible on mobile</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Fonts</strong> — Cormorant Garamond and Jost load correctly on mobile browsers</div></div>
+  </div>
+
+  <div class="task-group">
+    <div class="task-group-title"><span class="icon">✨</span> Design & Branding</div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Colors consistent</strong> — Linen Cream, Aged Oak, Terra Glow applied correctly across all sections</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>No placeholder content</strong> — no "Lorem ipsum", "Your store", or template text anywhere</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>All images relevant</strong> — no mismatched or irrelevant stock photos</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Store password set</strong> — Test@123 is active and working</div></div>
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn-prev" onclick="goTo(5)">← Back</button>
+    <button class="btn-next" onclick="nextStep(6)">Next: Final Submission →</button>
+  </div>
+</div>
+
+<!-- STEP 8: SUBMISSION -->
+<div class="step-page" id="step7">
+  <div class="step-header">
+    <div class="step-badge done">Day 2 · Final Step</div>
+    <div class="step-title">Final Submission</div>
+    <div class="step-desc">You've built a complete, professional Shopify store. Here's exactly what to submit to Digital Heroes.</div>
+    <div class="time-badge">⏱ Estimated time: 30 mins</div>
+  </div>
+
+  <div class="final-card">
+    <h2>Luminae is ready. 🎉</h2>
+    <p>One complete, professional Shopify store. Fully functional customer journey. Clean UI/UX and strong branding. Ready for real-world deployment.</p>
+  </div>
+
+  <div class="task-group">
+    <div class="task-group-title"><span class="icon">📋</span> Submission Checklist</div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Collaborator invite sent</strong> — Partners dashboard → Stores → your store → send collaborator access to the hiring team's email</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Store preview link ready</strong> — format: https://luminae.myshopify.com/?preview_token=xxx (get from Shopify admin → Online Store → Share preview)</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Password confirmed</strong> — Test@123 is active. Test by opening store in incognito window.</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Product CSV exported</strong> — Products → Export → All products → CSV for Excel (re-export from Shopify for the final version)</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Product images folder</strong> — original images saved in a folder named "Luminae_Product_Images_Original"</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Background-removed images</strong> — use remove.bg on each main product image, save in "Luminae_Product_Images_BgRemoved"</div></div>
+    <div class="qa-item"><div class="qa-check" onclick="toggleQA(this)"></div><div class="qa-text"><strong>Submit only the store link</strong> in the form — no portfolios, no extra links (per Digital Heroes instructions)</div></div>
+  </div>
+
+  <div class="deliverable-grid">
+    <div class="del-card"><div class="del-icon">🔗</div><div class="del-title">Store preview link</div><div class="del-desc">luminae.myshopify.com with password Test@123</div></div>
+    <div class="del-card"><div class="del-icon">👤</div><div class="del-title">Collaborator access</div><div class="del-desc">Sent via Shopify Partners dashboard</div></div>
+    <div class="del-card"><div class="del-icon">📄</div><div class="del-title">Product CSV</div><div class="del-desc">Exported from Shopify admin (final version)</div></div>
+    <div class="del-card"><div class="del-icon">🖼️</div><div class="del-title">Image folders</div><div class="del-desc">Original + background-removed product images</div></div>
+  </div>
+
+  <div class="success-box" style="margin-top:20px; font-size:14px; padding:16px;">
+    ✅ <strong>You're done.</strong> Luminae is a complete, professional, premium home wellness store — fully built, tested, and ready for the Digital Heroes review. Good luck! 🌿
+  </div>
+
+  <div class="nav-buttons">
+    <button class="btn-prev" onclick="goTo(6)">← Back to QA</button>
+  </div>
+</div>
+
+</div><!-- end main -->
+</div><!-- end layout -->
+
+<script>
+let currentStep = 0;
+const totalSteps = 8;
+const completedSteps = new Set();
+
+function goTo(n) {
+  document.querySelectorAll('.step-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
+  document.getElementById('nav' + n).classList.add('active');
+  currentStep = n;
+  window.scrollTo(0, 0);
+  document.querySelector('.main').scrollTo(0, 0);
+}
+
+function nextStep(n) {
+  completedSteps.add(n);
+  const navItem = document.getElementById('nav' + n);
+  navItem.classList.add('done');
+  updateProgress();
+  goTo(n + 1);
+}
+
+function updateProgress() {
+  const pct = Math.round((completedSteps.size / totalSteps) * 100);
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('prog-text').textContent = completedSteps.size + ' of ' + totalSteps + ' steps complete';
+}
+
+function toggleTask(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+function toggleCheck(e, el) {
+  e.stopPropagation();
+  el.classList.toggle('checked');
+}
+
+function toggleQA(el) {
+  el.classList.toggle('checked');
+}
+</script>
+</body>
+</html>

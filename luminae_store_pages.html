@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luminae — All Store Pages</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Georgia', serif; background: #F5EFE6; color: #3D2B1F; }
+
+  /* NAV */
+  .doc-nav { background: #3D2B1F; padding: 0; position: sticky; top: 0; z-index: 100; display: flex; overflow-x: auto; }
+  .doc-nav a { color: #E8DDD0; text-decoration: none; padding: 14px 20px; font-family: Arial, sans-serif; font-size: 13px; white-space: nowrap; border-right: 1px solid #5A3E2E; transition: background 0.2s; }
+  .doc-nav a:hover { background: #C2714F; color: #fff; }
+  .doc-nav a.active { background: #C2714F; color: #fff; }
+
+  /* LAYOUT */
+  .container { max-width: 860px; margin: 0 auto; padding: 48px 32px 80px; }
+
+  /* PAGE SECTIONS */
+  .page-section { display: none; }
+  .page-section.active { display: block; }
+
+  /* HEADER */
+  .page-header { border-bottom: 2px solid #C2714F; padding-bottom: 20px; margin-bottom: 36px; }
+  .page-label { font-family: Arial, sans-serif; font-size: 11px; font-weight: 600; color: #C2714F; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+  .page-title { font-size: 36px; font-weight: 400; color: #3D2B1F; line-height: 1.2; }
+  .page-subtitle { font-size: 15px; color: #7A5C47; margin-top: 8px; font-style: italic; }
+  .shopify-note { background: #E8DDD0; border-left: 3px solid #C2714F; border-radius: 6px; padding: 12px 16px; font-family: Arial, sans-serif; font-size: 13px; color: #5A3E2E; margin-bottom: 32px; line-height: 1.6; }
+  .shopify-note strong { color: #3D2B1F; }
+
+  /* CONTENT */
+  h2 { font-size: 22px; font-weight: 400; color: #3D2B1F; margin: 32px 0 12px; border-bottom: 1px solid #E8DDD0; padding-bottom: 8px; }
+  h3 { font-size: 17px; font-weight: 600; color: #3D2B1F; margin: 24px 0 8px; font-family: Arial, sans-serif; }
+  p { font-size: 15px; line-height: 1.9; color: #4A3020; margin-bottom: 16px; }
+  ul, ol { margin: 12px 0 20px 24px; }
+  li { font-size: 15px; line-height: 1.8; color: #4A3020; margin-bottom: 4px; }
+  .highlight-box { background: #E8DDD0; border-radius: 8px; padding: 20px 24px; margin: 24px 0; }
+  .highlight-box p { margin-bottom: 0; }
+  .faq-item { border: 1px solid #D4C5B5; border-radius: 8px; margin-bottom: 14px; overflow: hidden; }
+  .faq-q { background: #EDE5D8; padding: 16px 20px; font-size: 15px; font-weight: 600; color: #3D2B1F; font-family: Arial, sans-serif; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+  .faq-q:after { content: '+'; font-size: 20px; color: #C2714F; }
+  .faq-a { padding: 16px 20px; font-size: 15px; line-height: 1.8; color: #4A3020; background: #FAF7F3; }
+  .values-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+  .value-card { background: #EDE5D8; border-radius: 8px; padding: 20px; }
+  .value-card h4 { font-size: 14px; font-weight: 700; color: #C2714F; text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 8px; }
+  .value-card p { font-size: 14px; margin-bottom: 0; line-height: 1.6; }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-family: Arial, sans-serif; font-size: 14px; }
+  th { background: #3D2B1F; color: #F5EFE6; padding: 12px 16px; text-align: left; font-weight: 600; }
+  td { padding: 11px 16px; border-bottom: 1px solid #E8DDD0; color: #3D2B1F; vertical-align: top; }
+  tr:nth-child(even) td { background: #F9F5EF; }
+  .badge { display: inline-block; background: #C2714F; color: #fff; font-size: 11px; font-family: Arial, sans-serif; font-weight: 600; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; }
+  blockquote { border-left: 3px solid #C2714F; padding-left: 20px; margin: 24px 0; font-style: italic; font-size: 17px; color: #5A3E2E; line-height: 1.8; }
+  .copy-btn { display: inline-block; background: #3D2B1F; color: #F5EFE6; border: none; border-radius: 6px; padding: 10px 20px; font-family: Arial, sans-serif; font-size: 13px; cursor: pointer; margin-bottom: 24px; transition: background 0.2s; }
+  .copy-btn:hover { background: #C2714F; }
+  @media(max-width:600px){ .values-grid{ grid-template-columns:1fr; } .container{ padding:32px 18px 60px; } .page-title{ font-size:28px; } }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="doc-nav">
+  <a href="#" class="active" onclick="show('about',this)">About Us</a>
+  <a href="#" onclick="show('faq',this)">FAQ</a>
+  <a href="#" onclick="show('shipping',this)">Shipping & Returns</a>
+  <a href="#" onclick="show('privacy',this)">Privacy Policy</a>
+  <a href="#" onclick="show('terms',this)">Terms of Service</a>
+</nav>
+
+<div class="container">
+
+<!-- ============================================================ -->
+<!-- PAGE 1: ABOUT US -->
+<!-- ============================================================ -->
+<div id="about" class="page-section active">
+  <div class="page-header">
+    <div class="page-label">Page 1 of 5</div>
+    <div class="page-title">About Us</div>
+    <div class="page-subtitle">Shopify Admin → Pages → Add page → Title: "About Us" → Paste content below</div>
+  </div>
+  <div class="shopify-note">
+    <strong>Shopify instructions:</strong> Go to <strong>Online Store → Pages → Add page</strong>. Set title to <strong>"About Us"</strong>. Switch editor to HTML view and paste the content. Add this page to your main navigation menu.
+  </div>
+
+  <button class="copy-btn" onclick="copySection('about-content')">Copy page content</button>
+
+  <div id="about-content">
+    <blockquote>"Some rituals are rushed. Ours are meant to be savoured."</blockquote>
+
+    <h2>We believe the ordinary can be extraordinary</h2>
+    <p>Luminae was born from a simple but powerful idea — that your daily rituals deserve to feel as intentional as the life you're building. The soap you reach for every morning. The candle you light when the day finally quiets down. The body oil you smooth on before bed. These aren't just products. They're moments. And moments, when nurtured well, become a life well-lived.</p>
+    <p>We create premium, natural home wellness and body care products for women who believe that slowing down is not a luxury — it's a practice. Everything we make is thoughtfully crafted using clean, natural ingredients, with no compromises on quality, sustainability, or your skin's wellbeing.</p>
+
+    <h2>Our story</h2>
+    <p>Luminae started in a small kitchen in 2022, with a batch of handmade soap, a notebook full of scent blends, and a belief that women deserved better than synthetic, overcomplicated products wrapped in empty promises.</p>
+    <p>Our founder spent years searching for natural body care that actually worked — that smelled beautiful, felt luxurious, and contained nothing she couldn't pronounce. When she couldn't find it, she made it. She shared it with friends. Friends shared it with theirs. And slowly, quietly, Luminae grew.</p>
+    <p>Today, every product is still made in small batches, with the same careful attention to ingredients, scent, and sensory experience that started it all. We're proud to be a brand that has never compromised on what matters.</p>
+
+    <div class="values-grid">
+      <div class="value-card">
+        <h4>Natural Ingredients</h4>
+        <p>Every formula starts with nature — cold-pressed oils, botanical extracts, pure essential oils. Nothing synthetic, nothing unnecessary.</p>
+      </div>
+      <div class="value-card">
+        <h4>Small Batch Crafted</h4>
+        <p>We make in small quantities so every product is fresh, attentive, and held to the highest standards before it reaches you.</p>
+      </div>
+      <div class="value-card">
+        <h4>Sustainable Packaging</h4>
+        <p>Kraft boxes, glass vessels, recycled paper. We're committed to packaging that's as kind to the planet as our formulas are to your skin.</p>
+      </div>
+      <div class="value-card">
+        <h4>Cruelty-Free Always</h4>
+        <p>Not tested on animals. Not ever. We believe beauty should never come at another creature's expense.</p>
+      </div>
+    </div>
+
+    <h2>What we make</h2>
+    <p>The Luminae collection spans three thoughtfully curated categories. Our <strong>Body Rituals</strong> range includes artisan soaps, nourishing body oils, and exfoliating scrubs for a complete, sensory bathing experience. Our <strong>Home Ambiance</strong> collection — hand-poured soy candles and botanical reed diffusers — brings warmth and fragrance to your space. And our <strong>Ritual Bundles</strong> bring both worlds together in beautifully packaged gift sets, perfect for gifting or self-treating.</p>
+
+    <h2>Our promise to you</h2>
+    <div class="highlight-box">
+      <p>Every product we make is free from parabens, sulphates, synthetic dyes, and artificial fragrance. We use only ingredients we'd be happy for our own family to use. And we back everything with a satisfaction guarantee — because we believe you should love what you bring into your home.</p>
+    </div>
+
+    <h2>Join the ritual</h2>
+    <p>Luminae isn't just a brand. It's an invitation to slow down, to notice, to treat yourself with the same warmth you give so freely to everyone else. We're glad you found us. Now, let's build a ritual worth keeping.</p>
+    <p><em>With warmth,<br>The Luminae Team</em></p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 2: FAQ -->
+<!-- ============================================================ -->
+<div id="faq" class="page-section">
+  <div class="page-header">
+    <div class="page-label">Page 2 of 5</div>
+    <div class="page-title">Frequently Asked Questions</div>
+    <div class="page-subtitle">Shopify Admin → Pages → Add page → Title: "FAQ"</div>
+  </div>
+  <div class="shopify-note">
+    <strong>Shopify instructions:</strong> Go to <strong>Online Store → Pages → Add page</strong>. Set title to <strong>"FAQ"</strong>. Switch editor to HTML view, paste the content below. Add to footer navigation menu.
+  </div>
+
+  <button class="copy-btn" onclick="copySection('faq-content')">Copy page content</button>
+
+  <div id="faq-content">
+    <p>Have a question about Luminae products, orders, or ingredients? We've answered the most common ones below. Can't find what you're looking for? Reach us at <strong>hello@luminae.in</strong> — we're always happy to help.</p>
+
+    <h2>Products & Ingredients</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Are Luminae products truly natural and free from harsh chemicals?</div>
+      <div class="faq-a">Yes, absolutely. Every Luminae product is formulated with natural ingredients — cold-pressed oils, botanical extracts, himalayan minerals, and pure essential oils. We never use parabens, sulphates, synthetic dyes, or artificial fragrance. The full ingredient list is listed on every product page so you always know exactly what you're putting on your skin or in your home.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Are your products suitable for sensitive skin?</div>
+      <div class="faq-a">Most of our products are formulated to be gentle enough for sensitive skin, including our Goat Milk & Honey Artisan Soap Bar, which is especially kind to sensitive or dry skin types. However, we always recommend doing a patch test on a small area before using any new product, particularly if you have known allergies or very reactive skin. If you have specific concerns, feel free to email us and we can recommend the best products for your skin type.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Are Luminae products cruelty-free and vegan?</div>
+      <div class="faq-a">All Luminae products are 100% cruelty-free — we never test on animals and never will. Most of our range is also vegan-friendly. Our Goat Milk Soap Bar uses goat milk (an animal-derived ingredient), so it is not vegan, but it is cruelty-free. All other products in our range are fully vegan. Product pages clearly indicate where applicable.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">How long do the candles and diffusers last?</div>
+      <div class="faq-a">Our Soy Wax Ritual Candles provide up to 45 hours of burn time when used correctly — always trim the wick to 5mm before each burn and allow the wax to pool to the edges on the first use. Our Botanical Reed Diffusers last up to 60 days depending on room size and ventilation. Flipping the reeds every 3–4 days helps maintain consistent fragrance intensity.</div>
+    </div>
+
+    <h2>Orders & Delivery</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">How long will my order take to arrive?</div>
+      <div class="faq-a">We process all orders within 1–2 business days. Standard delivery across India takes 4–7 business days. Express delivery (2–3 business days) is available at checkout for an additional charge. You'll receive a tracking link by email as soon as your order is dispatched. For metro cities, delivery is typically faster — often 2–4 business days.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Do you offer free shipping?</div>
+      <div class="faq-a">Yes! We offer free standard shipping on all orders over ₹999. Orders below ₹999 are charged a flat shipping fee of ₹79. Express shipping is available at checkout for ₹149 regardless of order value. Free shipping is automatically applied at checkout once your cart reaches the qualifying amount.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Can I return or exchange a product?</div>
+      <div class="faq-a">We want you to love your Luminae purchase. If you're not completely satisfied, we accept returns within 14 days of delivery for unopened, unused products in their original packaging. Due to the personal nature of body care products, we're unable to accept returns on opened or used items unless they are defective or damaged on arrival. To initiate a return, please email hello@luminae.in with your order number and reason for return.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">My order arrived damaged. What should I do?</div>
+      <div class="faq-a">We're so sorry to hear that — this is rare but occasionally happens during transit. Please email us at hello@luminae.in within 48 hours of delivery with your order number and a photo of the damaged item. We'll arrange a replacement or full refund right away at no cost to you. Your satisfaction is our top priority and we'll make it right, no questions asked.</div>
+    </div>
+
+    <h2>Still have a question?</h2>
+    <div class="highlight-box">
+      <p>We'd love to hear from you. Email us at <strong>hello@luminae.in</strong> or fill in the form on our <strong>Contact Us</strong> page and we'll get back to you within one business day.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 3: SHIPPING & RETURNS -->
+<!-- ============================================================ -->
+<div id="shipping" class="page-section">
+  <div class="page-header">
+    <div class="page-label">Page 3 of 5</div>
+    <div class="page-title">Shipping & Returns Policy</div>
+    <div class="page-subtitle">Shopify Admin → Pages → Add page → Title: "Shipping & Returns"</div>
+  </div>
+  <div class="shopify-note">
+    <strong>Shopify instructions:</strong> Go to <strong>Online Store → Pages → Add page</strong>. Title: <strong>"Shipping & Returns"</strong>. Paste content in HTML view. Also add to <strong>Settings → Policies → Shipping Policy</strong> and <strong>Refund Policy</strong> for Shopify's built-in policy pages.
+  </div>
+
+  <button class="copy-btn" onclick="copySection('shipping-content')">Copy page content</button>
+
+  <div id="shipping-content">
+    <p>At Luminae, we're committed to getting your order to you safely, quickly, and with the same care we put into making every product. Please read our shipping and returns policy carefully.</p>
+
+    <h2>Order Processing</h2>
+    <p>All orders are processed within <strong>1–2 business days</strong> (Monday to Saturday, excluding public holidays). Orders placed on Sundays or public holidays will be processed the following business day. You'll receive an order confirmation email immediately after placing your order, and a dispatch notification with a tracking link once your order ships.</p>
+
+    <h2>Shipping Options & Rates</h2>
+    <table>
+      <tr><th>Shipping Method</th><th>Delivery Time</th><th>Cost</th></tr>
+      <tr><td>Standard Shipping</td><td>4–7 business days</td><td>₹79 (Free on orders over ₹999)</td></tr>
+      <tr><td>Express Shipping</td><td>2–3 business days</td><td>₹149</td></tr>
+      <tr><td>Same-Day Delivery</td><td>Same day (select pin codes)</td><td>₹199</td></tr>
+    </table>
+    <p>We currently ship to all pin codes across India. International shipping is not available at this time but is coming soon — sign up to our newsletter to be the first to know.</p>
+
+    <h2>Tracking Your Order</h2>
+    <p>Once your order is dispatched, you'll receive a tracking link via email and SMS. You can also track your order anytime by visiting our <strong>Track Order</strong> page and entering your order number and email address. If you haven't received a tracking update within 3 business days of your order, please contact us at hello@luminae.in.</p>
+
+    <h2>Packaging</h2>
+    <p>All Luminae products are carefully packed in recyclable kraft paper and bubble-lined mailers to ensure they arrive safely. Gift sets and bundles are shipped in their original premium gift boxes, nested inside a protective outer box. We care about our environmental footprint — our packaging is 90% plastic-free.</p>
+
+    <h2>Returns Policy</h2>
+    <h3>Eligibility for Returns</h3>
+    <p>We accept returns within <strong>14 days of the delivery date</strong> under the following conditions:</p>
+    <ul>
+      <li>The product is unused and unopened</li>
+      <li>The product is in its original packaging with all seals intact</li>
+      <li>You have proof of purchase (order confirmation email)</li>
+    </ul>
+    <p>Due to the personal care nature of our products, we are unable to accept returns on opened, used, or tampered items unless they are defective or damaged on arrival.</p>
+
+    <h3>Non-Returnable Items</h3>
+    <ul>
+      <li>Opened body care products (soaps, oils, scrubs)</li>
+      <li>Lit candles or opened diffusers</li>
+      <li>Personalised or custom orders</li>
+      <li>Products purchased during clearance or final sale</li>
+    </ul>
+
+    <h3>How to Initiate a Return</h3>
+    <ol>
+      <li>Email us at <strong>hello@luminae.in</strong> with your order number and reason for return</li>
+      <li>We'll respond within 1 business day with a return authorisation and instructions</li>
+      <li>Pack the item securely in its original packaging and ship to the address provided</li>
+      <li>Share the return tracking number with us once dispatched</li>
+    </ol>
+    <p>Return shipping costs are the responsibility of the customer unless the return is due to a defective or incorrect item.</p>
+
+    <h2>Refunds</h2>
+    <p>Once we receive and inspect your return, we'll process your refund within <strong>5–7 business days</strong>. Refunds are issued to the original payment method. You'll receive an email confirmation once your refund has been processed. Please note that it may take an additional 3–5 business days for the refund to appear in your account depending on your bank or payment provider.</p>
+
+    <h2>Damaged or Incorrect Orders</h2>
+    <div class="highlight-box">
+      <p>If your order arrives damaged, defective, or incorrect, please email <strong>hello@luminae.in</strong> within <strong>48 hours of delivery</strong> with your order number and a photo of the issue. We will arrange a free replacement or full refund immediately — no return required for damaged items.</p>
+    </div>
+
+    <h2>Exchanges</h2>
+    <p>We don't offer direct exchanges at this time. If you'd like a different product, please return the original item (subject to our returns policy) and place a new order. This ensures the fastest turnaround for you.</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 4: PRIVACY POLICY -->
+<!-- ============================================================ -->
+<div id="privacy" class="page-section">
+  <div class="page-header">
+    <div class="page-label">Page 4 of 5</div>
+    <div class="page-title">Privacy Policy</div>
+    <div class="page-subtitle">Shopify Admin → Settings → Policies → Privacy Policy → Paste content</div>
+  </div>
+  <div class="shopify-note">
+    <strong>Shopify instructions:</strong> Go to <strong>Settings → Policies</strong> and paste this into the <strong>Privacy Policy</strong> field. Shopify will automatically link it in your checkout and footer. Last updated: March 2026.
+  </div>
+
+  <button class="copy-btn" onclick="copySection('privacy-content')">Copy page content</button>
+
+  <div id="privacy-content">
+    <p><em>Last updated: March 2026</em></p>
+    <p>At Luminae ("we", "us", "our"), your privacy is important to us. This Privacy Policy explains how we collect, use, store, and protect your personal information when you visit our website (luminae.myshopify.com) or make a purchase from us.</p>
+    <p>By using our website, you agree to the collection and use of information in accordance with this policy.</p>
+
+    <h2>Information We Collect</h2>
+    <h3>Information you provide directly</h3>
+    <ul>
+      <li><strong>Order information:</strong> name, billing and shipping address, phone number, email address, and payment details when you make a purchase</li>
+      <li><strong>Account information:</strong> email address and password if you create an account</li>
+      <li><strong>Communication:</strong> any messages you send us via contact forms, email, or customer support</li>
+      <li><strong>Newsletter sign-up:</strong> email address if you subscribe to our mailing list</li>
+    </ul>
+
+    <h3>Information collected automatically</h3>
+    <ul>
+      <li><strong>Device information:</strong> IP address, browser type, operating system, and device identifiers</li>
+      <li><strong>Usage data:</strong> pages visited, time spent on pages, links clicked, and referring URLs</li>
+      <li><strong>Cookies:</strong> we use cookies to maintain your session, remember preferences, and improve your experience (see Cookies section below)</li>
+    </ul>
+
+    <h2>How We Use Your Information</h2>
+    <p>We use the information we collect to:</p>
+    <ul>
+      <li>Process and fulfil your orders and send order confirmations and shipping updates</li>
+      <li>Communicate with you about your order, returns, or support requests</li>
+      <li>Send marketing emails and newsletters (only with your consent — you can unsubscribe at any time)</li>
+      <li>Improve our website, products, and customer experience</li>
+      <li>Detect and prevent fraud and protect the security of our systems</li>
+      <li>Comply with legal obligations</li>
+    </ul>
+
+    <h2>Sharing Your Information</h2>
+    <p>We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following circumstances:</p>
+    <ul>
+      <li><strong>Service providers:</strong> with trusted third-party providers who help us operate our business (payment processors, shipping partners, email marketing platforms) — only to the extent necessary to perform their services</li>
+      <li><strong>Legal requirements:</strong> if required by law or to protect our rights, users, or the public</li>
+      <li><strong>Business transfers:</strong> in the event of a merger, acquisition, or sale of all or part of our assets</li>
+    </ul>
+
+    <h2>Payment Security</h2>
+    <p>All payment transactions are processed through Shopify Payments and/or Razorpay, which use industry-standard SSL encryption. We do not store your full credit card or debit card details on our servers. All payment processing complies with PCI DSS standards.</p>
+
+    <h2>Cookies</h2>
+    <p>We use cookies to enhance your browsing experience. Cookies are small text files stored on your device. We use:</p>
+    <ul>
+      <li><strong>Essential cookies:</strong> required for the website to function (e.g., shopping cart, login sessions)</li>
+      <li><strong>Analytics cookies:</strong> to understand how visitors use our site (Google Analytics)</li>
+      <li><strong>Marketing cookies:</strong> to show relevant ads and measure campaign performance</li>
+    </ul>
+    <p>You can control cookie preferences through your browser settings. Note that disabling certain cookies may affect website functionality.</p>
+
+    <h2>Your Rights</h2>
+    <p>You have the right to:</p>
+    <ul>
+      <li>Access the personal data we hold about you</li>
+      <li>Request correction of inaccurate data</li>
+      <li>Request deletion of your data (subject to legal obligations)</li>
+      <li>Withdraw consent for marketing communications at any time by clicking "Unsubscribe" in any email</li>
+      <li>Lodge a complaint with the relevant data protection authority</li>
+    </ul>
+    <p>To exercise any of these rights, please contact us at <strong>hello@luminae.in</strong>.</p>
+
+    <h2>Data Retention</h2>
+    <p>We retain your personal data for as long as necessary to fulfil the purposes for which it was collected, including legal, accounting, and reporting requirements. Order information is typically retained for 7 years for tax compliance purposes.</p>
+
+    <h2>Children's Privacy</h2>
+    <p>Our website is not directed at children under the age of 13. We do not knowingly collect personal information from children. If you believe we have inadvertently collected such information, please contact us immediately.</p>
+
+    <h2>Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated revision date. We encourage you to review this policy periodically.</p>
+
+    <h2>Contact Us</h2>
+    <p>If you have any questions about this Privacy Policy, please contact us at:<br>
+    <strong>Email:</strong> hello@luminae.in<br>
+    <strong>Brand:</strong> Luminae, India</p>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- PAGE 5: TERMS OF SERVICE -->
+<!-- ============================================================ -->
+<div id="terms" class="page-section">
+  <div class="page-header">
+    <div class="page-label">Page 5 of 5</div>
+    <div class="page-title">Terms of Service</div>
+    <div class="page-subtitle">Shopify Admin → Settings → Policies → Terms of Service → Paste content</div>
+  </div>
+  <div class="shopify-note">
+    <strong>Shopify instructions:</strong> Go to <strong>Settings → Policies</strong> and paste into the <strong>Terms of Service</strong> field. Also go to <strong>Online Store → Pages → Add page</strong>, title "Terms of Service", and paste the same content for a dedicated page. Last updated: March 2026.
+  </div>
+
+  <button class="copy-btn" onclick="copySection('terms-content')">Copy page content</button>
+
+  <div id="terms-content">
+    <p><em>Last updated: March 2026</em></p>
+    <p>Welcome to Luminae. By accessing our website (luminae.myshopify.com) or purchasing our products, you agree to be bound by these Terms of Service. Please read them carefully before using our site.</p>
+
+    <h2>1. General</h2>
+    <p>These Terms of Service ("Terms") govern your use of the Luminae website and the purchase of products from our store. By placing an order, you confirm that you are at least 18 years of age and have the legal capacity to enter into a binding agreement.</p>
+
+    <h2>2. Products</h2>
+    <p>We reserve the right to modify or discontinue products at any time without notice. Product images are for illustrative purposes — actual products may vary slightly in colour, texture, or appearance due to natural ingredient variation and screen display differences. We do not warrant that product descriptions are error-free and reserve the right to correct any errors.</p>
+
+    <h2>3. Pricing</h2>
+    <p>All prices displayed on our website are in Indian Rupees (INR) and are inclusive of applicable taxes unless stated otherwise. We reserve the right to change prices at any time. The price charged for an order will be the price at the time the order is placed. Promotions and discount codes are subject to their individual terms and may not be combined unless explicitly stated.</p>
+
+    <h2>4. Orders & Payment</h2>
+    <p>By placing an order, you make an offer to purchase the selected products at the stated price. We reserve the right to accept or decline any order. An order is confirmed only upon receiving successful payment and sending you an order confirmation email.</p>
+    <p>We accept payment via all major credit/debit cards, UPI, net banking, and Shopify Payments. Payment is due in full at the time of order. We do not store your payment details on our servers.</p>
+
+    <h2>5. Shipping & Delivery</h2>
+    <p>Delivery timelines are estimates and not guaranteed. Luminae is not responsible for delays caused by courier partners, weather events, or circumstances beyond our control. Risk of loss and title for items purchased pass to you upon delivery to the carrier. Please refer to our full Shipping & Returns Policy for details.</p>
+
+    <h2>6. Returns & Refunds</h2>
+    <p>Returns and refunds are governed by our Shipping & Returns Policy, which forms part of these Terms. By placing an order, you agree to the terms of our returns policy.</p>
+
+    <h2>7. Intellectual Property</h2>
+    <p>All content on this website — including text, images, logos, product names, graphics, and design — is the property of Luminae and is protected by applicable intellectual property laws. You may not reproduce, distribute, or use any content from this site without our express written permission.</p>
+
+    <h2>8. Limitation of Liability</h2>
+    <p>Luminae shall not be liable for any indirect, incidental, special, or consequential damages arising from the use of our products or website, including but not limited to skin reactions (where the product was used contrary to instructions), loss of data, or service interruptions. Our total liability to you for any claim shall not exceed the amount paid by you for the product giving rise to the claim.</p>
+
+    <h2>9. Product Use Disclaimer</h2>
+    <p>Our products are intended for external use only unless specifically stated. Always read the product label before use. Perform a patch test before using any new product. Luminae is not responsible for adverse reactions arising from misuse, allergy to natural ingredients, or failure to follow usage instructions. If irritation occurs, discontinue use immediately and consult a healthcare professional.</p>
+
+    <h2>10. Governing Law</h2>
+    <p>These Terms shall be governed by and construed in accordance with the laws of India. Any disputes arising from these Terms or your use of our website shall be subject to the exclusive jurisdiction of the courts of India.</p>
+
+    <h2>11. Changes to Terms</h2>
+    <p>We reserve the right to update these Terms at any time. Changes will be posted on this page. Continued use of our website after changes constitutes acceptance of the updated Terms.</p>
+
+    <h2>12. Contact</h2>
+    <p>For any questions regarding these Terms, please contact us at:<br>
+    <strong>Email:</strong> hello@luminae.in<br>
+    <strong>Brand:</strong> Luminae, India</p>
+
+    <div class="highlight-box">
+      <p>By completing a purchase on luminae.myshopify.com, you confirm that you have read, understood, and agreed to these Terms of Service and our Privacy Policy.</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- end container -->
+
+<script>
+function show(id, el) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.doc-nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo(0,0);
+  return false;
+}
+
+function copySection(id) {
+  const el = document.getElementById(id);
+  const html = el.innerHTML;
+  if (navigator.clipboard && window.ClipboardItem) {
+    const blob = new Blob([html], {type: 'text/html'});
+    const plain = el.innerText;
+    const blobPlain = new Blob([plain], {type: 'text/plain'});
+    navigator.clipboard.write([new ClipboardItem({'text/html': blob, 'text/plain': blobPlain})]);
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = el.innerText;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  }
+  event.target.textContent = 'Copied!';
+  setTimeout(() => event.target.textContent = 'Copy page content', 2000);
+}
+</script>
+</body>
+</html>
