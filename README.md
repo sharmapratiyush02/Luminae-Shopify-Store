@@ -64,7 +64,7 @@ The challenge required building a complete, market-ready Shopify store from scra
 |---|---|
 | **Live Store URL** | https://luminae-shop.myshopify.com |
 | **Store Password** | Test@123 |
-| **Demo Video** | [Watch on YouTube]https://youtu.be/K1SLMvgHDZw |
+| **Demo Video** | [Watch on YouTube](https://youtu.be/K1SLMvgHDZw) |
 
 ---
 
